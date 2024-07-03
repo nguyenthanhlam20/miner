@@ -11,7 +11,24 @@ public class Hook : MonoBehaviour
 
     private HookMovement hookMovement;
 
-    public void Awake() => hookMovement = GetComponentInParent<HookMovement>();
+    public static Hook Instance;
+
+    public float boostSpeed { get; set; } = 0f;
+
+    public void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(Instance);
+        }
+        hookMovement = GetComponentInParent<HookMovement>();
+
+    }
+
     private List<string> itemTags = new() { "Gold", "Stone" };
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -29,7 +46,7 @@ public class Hook : MonoBehaviour
         itemAttachedCount = 1;
         collision.transform.parent = itemHolder;
         collision.transform.position = itemHolder.position;
-        hookMovement.moveSpeed = collision.GetComponent<Items>().hookSpeed;
+        hookMovement.moveSpeed = collision.GetComponent<Items>().hookSpeed + boostSpeed;
         hookMovement.HookAttachedItem();
 
         AudioManager.instance.Play(collision.CompareTag("Stone") ? AudioName.HookGrabStone : AudioName.HookGrabGold);
@@ -38,7 +55,7 @@ public class Hook : MonoBehaviour
 
     private void RewardAdditionalTime(Collider2D collision)
     {
-        if (!collision.CompareTag("Stone")) GameManager.instance.CountDownTimer += 5;
+        if (!collision.CompareTag("Stone")) GameManager.instance.CountDownTimer += 2;
     }
 
     private void DisableItem()
@@ -47,6 +64,17 @@ public class Hook : MonoBehaviour
         GameManager.instance.DisplayScore(child.GetComponent<Items>().scoreValue);
         Destroy(child.gameObject);
     }
+
+    public void ExplodeItem()
+    {
+        if (itemHolder != null && itemHolder.childCount > 0)
+        {
+            var child = itemHolder?.GetChild(0);
+            Destroy(child?.gameObject);
+            ResetHook();
+        }
+    }
+
     private void ResetHook()
     {
         AudioManager.instance.Play(AudioName.CollectItem);

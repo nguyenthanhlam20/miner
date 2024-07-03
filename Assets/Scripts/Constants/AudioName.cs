@@ -9,4 +9,6 @@ public class AudioName
     public static string HookGrabStone = "Hook Grab Stone";
     public static string PullSound = "Pull Sound";
     public static string CollectItem = "Collect Item";
+    public static string Explosion = "Explosion";
+    public static string Drinking = "Drinking";
 }

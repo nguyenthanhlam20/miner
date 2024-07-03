@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
     {
         IsWinLevel = true;
         UserDataManager.Instance.UserData.CurrentLevel = CurrentLevel + 1;
+        UserDataManager.Instance.UserData.TotalMoney += scoreToWin;
         UserDataManager.Instance.SaveUserData();
         SceneManager.LoadScene(SceneName.YouWin);
     }
@@ -80,12 +81,10 @@ public class GameManager : MonoBehaviour
     private void SaveWhenGameOver()
     {
         var highestLevel = UserDataManager.Instance.UserData.HighestLevel;
-
         if (CurrentLevel > highestLevel)
-        {
             UserDataManager.Instance.UserData.HighestLevel = CurrentLevel;
-            UserDataManager.Instance.UserData.CurrentLevel = 1;
-            UserDataManager.Instance.SaveUserData();
-        }
+
+        UserDataManager.Instance.ResetData();
+        UserDataManager.Instance.SaveUserData();
     }
 }

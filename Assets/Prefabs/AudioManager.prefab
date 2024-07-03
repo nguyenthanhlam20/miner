@@ -108,3 +108,17 @@ MonoBehaviour:
     loop: 1
     playOnAwake: 1
     source: {fileID: 0}
+  - name: Explosion
+    clip: {fileID: 8300000, guid: cd27c6ff7b24f8a439d036cb2793a740, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: Drinking
+    clip: {fileID: 8300000, guid: 0025803cd0b03b7469c9f61277a69aa9, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    playOnAwake: 0
+    source: {fileID: 0}
