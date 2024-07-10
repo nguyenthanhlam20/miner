@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class FileManager : MonoBehaviour
 {
     private static string UserDataPath = Application.persistentDataPath + "/user_data.json";
 
-    public static void SaveUserData(UserData myData)
+    public static void SaveUserData(List<UserData> myData)
     {
         try
         {
@@ -23,10 +24,8 @@ public class FileManager : MonoBehaviour
             Debug.LogError("Error saving user data: " + e.Message);
         }
     }
-    public static UserData LoadUserData()
+    public static List<UserData> LoadUserData()
     {
-        var myData = new UserData();
-
         if (File.Exists(UserDataPath))
         {
             try
@@ -35,7 +34,7 @@ public class FileManager : MonoBehaviour
                 var jsonData = File.ReadAllText(UserDataPath);
 
                 // Deserialize the JSON data to a UserData object
-                var userData = JsonConvert.DeserializeObject<UserData>(jsonData);
+                var userData = JsonConvert.DeserializeObject<List<UserData>>(jsonData);
 
                 return userData;
             }
@@ -45,15 +44,7 @@ public class FileManager : MonoBehaviour
                 Debug.LogError("Error loading user data: " + e.Message);
             }
         }
-        else
-        {
-            // If the file doesn't exist, retrieve the default data and save it to the file
-            myData = new UserData();
-            SaveUserData(myData);
-        }
-
-        // Return the loaded user data
-        return myData;
+        return new List<UserData>();
     }
 
 }

@@ -1,9 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UserDataManager : MonoBehaviour
 {
     public static UserDataManager Instance;
 
+    public string ProfileName { get; set; }
+    public List<UserData> Multiplayers { get; set; }
     public UserData UserData { get; set; }
 
     private void Awake()
@@ -11,7 +15,7 @@ public class UserDataManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            UserData = FileManager.LoadUserData();
+            Multiplayers = FileManager.LoadUserData();
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -20,7 +24,41 @@ public class UserDataManager : MonoBehaviour
         }
     }
 
-    public void SaveUserData() => FileManager.SaveUserData(UserData);
+    public void LoadSpecificProfile()
+    {
+        UserData = Multiplayers.FirstOrDefault(x => x.ProfileName == ProfileName);
+    }
+
+    public void RemoveProfile(int index)
+    {
+        if (index <= Multiplayers.Count - 1)
+        {
+            Multiplayers.RemoveAt(index);
+            FileManager.SaveUserData(Multiplayers);
+        }
+    }
+
+    public (bool, string) AddNewProfile(string fullname)
+    {
+        if (Multiplayers.Count == 3)
+            return (false, "you have reach the profile limitation of 3.");
+
+        var anyUser = Multiplayers.Any(x => x.ProfileName == fullname);
+        if (anyUser) return (false, "profile name is already exist.");
+
+        Multiplayers.Add(new UserData { ProfileName = fullname });
+        FileManager.SaveUserData(Multiplayers);
+        return (true, "Add new profile success.");
+    }
+
+
+
+    public void SaveUserData()
+    {
+        var index = Multiplayers.FindIndex(x => x.ProfileName == ProfileName);
+        Multiplayers[index] = UserData;
+        FileManager.SaveUserData(Multiplayers);
+    }
 
     public void ResetData()
     {
@@ -34,6 +72,7 @@ public class UserDataManager : MonoBehaviour
 
 public class UserData
 {
+    public string ProfileName { get; set; }
     public int HighestLevel { set; get; } = 1;
     public int CurrentLevel { set; get; } = 1;
     public long TotalMoney { set; get; } = 1000;

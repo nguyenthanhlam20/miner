@@ -17,7 +17,7 @@ public class MenuHandler : MonoBehaviour
     public void Play()
 	{
 		AudioManager.instance.PausePlay(AudioName.BG, paused: false);
-		SceneManager.LoadScene(SceneName.World);
+		SceneManager.LoadScene(SceneName.Profile);
 		AudioManager.instance.StopPlay(AudioName.Win);
 	}
 
