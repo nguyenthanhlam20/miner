@@ -10,8 +10,18 @@ public class WorldHandler : MonoBehaviour
     private void Awake()
     {
         playAgain.onClick.AddListener(() => PlayAgain());
-        btnReturn.onClick.AddListener(() => SceneManager.LoadScene(SceneName.Profile));
+        btnReturn.onClick.AddListener(() => GoToPreviousScene());
     }
 
-    private void PlayAgain() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    private void GoToPreviousScene()
+    {
+        AudioManager.instance.StopPlay(AudioName.RopeStretch);
+        SceneManager.LoadScene(SceneName.Profile);
+    }
+
+    private void PlayAgain()
+    {
+        AudioManager.instance.StopPlay(AudioName.RopeStretch);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
